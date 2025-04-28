@@ -1,19 +1,12 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
-
-[RequireComponent(typeof(Cube))]
 public class CubeLifetimeCount : MonoBehaviour
 {
-    private Cube _cube;
+    public event Action LifetimeEnded;
     private bool _isCountingLifetime = false;
-    private CubeFactory _factory;
     private Coroutine _lifeTimeCoroutine;
-
-    private void Awake()
-    {
-        _cube = GetComponent<Cube>();
-    }
 
     private void OnEnable()
     {
@@ -26,22 +19,16 @@ public class CubeLifetimeCount : MonoBehaviour
         }
     }
 
-    public void Initialize(CubeFactory factory)
-    {
-        _factory = factory;
-    }
-
     public void StartLifetimeCountdown()
     {
         float minLifetime = 2f;
         float maxLifetime = 5f;
-        float lifeTime = Random.Range(minLifetime, maxLifetime);
+        float lifeTime = UnityEngine.Random.Range(minLifetime, maxLifetime);
 
-        if (_isCountingLifetime == true)
+        if (_isCountingLifetime)
             return;
-        
-        _isCountingLifetime = true;
 
+        _isCountingLifetime = true;
         _lifeTimeCoroutine = StartCoroutine(LifetimeCoroutine(lifeTime));
     }
 
@@ -49,11 +36,9 @@ public class CubeLifetimeCount : MonoBehaviour
     {
         yield return new WaitForSeconds(lifeTime);
 
-        if (_factory != null)
-            _factory.ReturnCube(_cube);
-        else
-            Destroy(gameObject);
+        LifetimeEnded?.Invoke();
 
+        _isCountingLifetime = false;
         _lifeTimeCoroutine = null;
     }
 }

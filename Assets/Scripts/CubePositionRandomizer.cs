@@ -13,8 +13,6 @@ public class CubePositionRandomizer : MonoBehaviour
 
         if (renderer != null)
             _platformSize = renderer.bounds.size;
-        else
-            Debug.LogWarning("Платформа не имеет компонент Renderer!");
     }
     
     public Vector3 GetRandomPositionAbovePlatform()

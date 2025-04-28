@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private CubeFactory _factory;
+    [SerializeField] private CubePool _factory;
     [SerializeField] private CubePositionRandomizer _positionRandomizer;
     [SerializeField] private float _spawnInterval = 0.5f;
 
@@ -32,10 +32,6 @@ public class CubeSpawner : MonoBehaviour
         cube.transform.position = randomPosition;
         cube.transform.rotation = Quaternion.identity;
         cube.SetColor(_startColor);
-            
-        if (cube.TryGetComponent(out CubeLifetimeCount lifetimeCount))
-            lifetimeCount.Initialize(_factory);
-        else
-            Debug.LogWarning($"Cube {cube.gameObject.name} не имеет компонента CubeLifetimeCount");
-    }
+        cube.InitializeFactory(_factory);       
+    }    
 }

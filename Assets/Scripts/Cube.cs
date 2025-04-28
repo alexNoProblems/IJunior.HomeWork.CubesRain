@@ -7,6 +7,7 @@ public class Cube : MonoBehaviour
     public Rigidbody Rigidbody { get; private set; }
     public CubeLifetimeCount LifetimeCount { get; private set; }
 
+    private CubePool _factory;
     private bool _hasCollided = false;
 
     private void Awake()
@@ -19,6 +20,32 @@ public class Cube : MonoBehaviour
     private void OnEnable()
     {
         _hasCollided = false;
+
+        LifetimeCount.LifetimeEnded += HandleLifetimeEnded;
+    }
+
+    private void OnDisable()
+    {
+        LifetimeCount.LifetimeEnded -= HandleLifetimeEnded;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (_hasCollided) 
+            return;
+        
+        if (collision.gameObject.TryGetComponent<Platform>(out Platform platform))
+        {
+            _hasCollided = true;
+            Color newColor = Colorizer.GenerateRandomColor();
+            SetColor(newColor);
+            LifetimeCount.StartLifetimeCountdown();
+        }
+    }
+
+    public void InitializeFactory(CubePool factory)
+    {
+        _factory = factory;
     }
 
     public void SetColor(Color color)
@@ -26,17 +53,11 @@ public class Cube : MonoBehaviour
         Colorizer.SetColor(color);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void HandleLifetimeEnded()
     {
-        if (_hasCollided == true) 
-            return;
-        
-        if (collision.gameObject.TryGetComponent<PlatformTag>(out PlatformTag platformTag))
-        {
-            _hasCollided = true;
-            Color newColor = Colorizer.GenerateRandomColor();
-            SetColor(newColor);
-            LifetimeCount.StartLifetimeCountdown();
-        }
+        if (_factory != null)
+            _factory.ReturnCube(this);
+        else
+            Destroy(gameObject);
     }
 }
