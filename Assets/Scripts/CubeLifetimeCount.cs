@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 
 [RequireComponent(typeof(Cube))]
@@ -7,6 +8,7 @@ public class CubeLifetimeCount : MonoBehaviour
     private Cube _cube;
     private bool _isCountingLifetime = false;
     private CubeFactory _factory;
+    private Coroutine _lifeTimeCoroutine;
 
     private void Awake()
     {
@@ -16,7 +18,12 @@ public class CubeLifetimeCount : MonoBehaviour
     private void OnEnable()
     {
         _isCountingLifetime = false;
-        CancelInvoke();
+        
+        if (_lifeTimeCoroutine != null)
+        {
+            StopCoroutine(_lifeTimeCoroutine);
+            _lifeTimeCoroutine = null;
+        }
     }
 
     public void Initialize(CubeFactory factory)
@@ -35,14 +42,18 @@ public class CubeLifetimeCount : MonoBehaviour
         
         _isCountingLifetime = true;
 
-        Invoke(nameof(ReturnToPool), lifeTime);
+        _lifeTimeCoroutine = StartCoroutine(LifetimeCoroutine(lifeTime));
     }
 
-    private void ReturnToPool()
+    private IEnumerator LifetimeCoroutine(float lifeTime)
     {
+        yield return new WaitForSeconds(lifeTime);
+
         if (_factory != null)
             _factory.ReturnCube(_cube);
         else
             Destroy(gameObject);
+
+        _lifeTimeCoroutine = null;
     }
 }
