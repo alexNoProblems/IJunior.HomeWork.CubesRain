@@ -4,10 +4,10 @@ using System;
 
 public class CubeLifetimeCount : MonoBehaviour
 {
-    public event Action LifetimeEnded;
     private bool _isCountingLifetime = false;
     private Coroutine _lifeTimeCoroutine;
-
+    public event Action LifetimeEnded;
+    
     private void OnEnable()
     {
         _isCountingLifetime = false;

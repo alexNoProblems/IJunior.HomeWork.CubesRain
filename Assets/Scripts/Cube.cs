@@ -3,12 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(CubeColorizer), typeof(Rigidbody), typeof (CubeLifetimeCount))]
 public class Cube : MonoBehaviour
 {
+    private CubePool _factory;
+    private bool _hasCollided = false;
+
     public CubeColorizer Colorizer {get; private set; }
     public Rigidbody Rigidbody { get; private set; }
     public CubeLifetimeCount LifetimeCount { get; private set; }
-
-    private CubePool _factory;
-    private bool _hasCollided = false;
 
     private void Awake()
     {
@@ -43,9 +43,10 @@ public class Cube : MonoBehaviour
         }
     }
 
-    public void InitializeFactory(CubePool factory)
+    public void Initialize(CubePool factory, Color color)
     {
         _factory = factory;
+        SetColor(color);
     }
 
     public void SetColor(Color color)
@@ -58,6 +59,6 @@ public class Cube : MonoBehaviour
         if (_factory != null)
             _factory.ReturnCube(this);
         else
-            Destroy(gameObject);
+            throw new System.InvalidOperationException("Cube: Factory не инициализирована. Невозможно вернуть cube в пул!!!");
     }
 }

@@ -31,7 +31,6 @@ public class CubeSpawner : MonoBehaviour
         Cube cube = _factory.GetCube();
         cube.transform.position = randomPosition;
         cube.transform.rotation = Quaternion.identity;
-        cube.SetColor(_startColor);
-        cube.InitializeFactory(_factory);       
+        cube.Initialize(_factory, _startColor);       
     }    
 }
