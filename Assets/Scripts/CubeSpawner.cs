@@ -8,10 +8,16 @@ public class CubeSpawner : MonoBehaviour
     [SerializeField] private float _spawnInterval = 0.5f;
 
     private Color _startColor;
+    private WaitForSeconds _waitForSecond;
+
+    private void Awake()
+    {
+        _waitForSecond = new WaitForSeconds(_spawnInterval);
+    }
 
     private void Start()
     {
-        _startColor = new Color(Random.value, Random.value,Random.value);
+        _startColor = new Color(Random.value, Random.value, Random.value);
         StartCoroutine(SpawnRoutine());
     }
 
@@ -21,7 +27,7 @@ public class CubeSpawner : MonoBehaviour
         {
             SpawnCube();
 
-            yield return new WaitForSeconds(_spawnInterval);
+            yield return _waitForSecond;
         }
     }
 
