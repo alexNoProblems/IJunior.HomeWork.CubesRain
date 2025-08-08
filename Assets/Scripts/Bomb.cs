@@ -6,24 +6,51 @@ public class Bomb : MonoBehaviour
 {
     [SerializeField] private float _minFadeTime = 2f;
     [SerializeField] private float _maxFadeTime = 5f;
-    [SerializeField] private float _explosionForce = 500f;
+    [SerializeField] private float _explosionForce = 10f;
     [SerializeField] private float _explosionRadius = 5f;
+    [SerializeField] private float _returnDelay = 0.5f;
 
+    private GenericPool<Bomb> _pool; 
     private Material _materialInstance;
     private Renderer _renderer;
     private Color _originalColor;
+    private WaitForSeconds _waitForSeconds;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+        _waitForSeconds = new WaitForSeconds(_returnDelay);
+
         InitMaterial();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        float fadeDuration = Random.Range(_minFadeTime, _maxFadeTime);
+        ResetColorAlpha();
 
+        float fadeDuration = Random.Range(_minFadeTime, _maxFadeTime);
         StartCoroutine(FadeAndExplode(fadeDuration));
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
+    public void Init(GenericPool<Bomb> pool)
+    {
+        _pool = pool;
+    }
+
+    private void ResetColorAlpha()
+    {
+        if (_materialInstance != null)
+        {
+            Color startColor = Color.black;
+            startColor.a = 1f;
+            _materialInstance.color = startColor;
+            _originalColor = startColor;
+        }
     }
 
     private IEnumerator FadeAndExplode(float duration)
@@ -43,6 +70,13 @@ public class Bomb : MonoBehaviour
         }
 
         Explode();
+
+        yield return _waitForSeconds;
+
+        if (_pool != null)
+            _pool.Return(this);
+        else
+            Destroy(gameObject);
     }
 
     private void InitMaterial()

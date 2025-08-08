@@ -1,14 +1,17 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(CubeColorizer), typeof(Rigidbody), typeof (CubeLifetimeCount))]
 public class Cube : MonoBehaviour
 {
-    private CubePool _factory;
-    private bool _hasCollided = false;
-
     public CubeColorizer Colorizer {get; private set; }
     public Rigidbody Rigidbody { get; private set; }
     public CubeLifetimeCount LifetimeCount { get; private set; }
+
+    private GenericPool<Cube> _factory;
+    private bool _hasCollided = false;
+
+    public event Action<Vector3> CubeDestroyed;
 
     private void Awake()
     {
@@ -27,6 +30,7 @@ public class Cube : MonoBehaviour
     private void OnDisable()
     {
         LifetimeCount.LifetimeEnded -= HandleLifetimeEnded;
+        CubeDestroyed = null;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -43,7 +47,7 @@ public class Cube : MonoBehaviour
         }
     }
 
-    public void Initialize(CubePool factory, Color color)
+    public void Initialize(GenericPool<Cube> factory, Color color)
     {
         _factory = factory;
         SetColor(color);
@@ -56,8 +60,10 @@ public class Cube : MonoBehaviour
 
     private void HandleLifetimeEnded()
     {
+        CubeDestroyed?.Invoke(transform.position);
+
         if (_factory != null)
-            _factory.ReturnCube(this);
+            _factory.Return(this);
         else
             throw new System.InvalidOperationException("Cube: Factory не инициализирована. Невозможно вернуть cube в пул!!!");
     }

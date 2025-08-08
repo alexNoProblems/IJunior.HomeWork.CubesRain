@@ -1,23 +1,24 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
-public class GenericSpawner<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class GenericSpawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private ObjectPool<T> _pool;
-    [SerializeField] private CubePositionRandomizer _randomozer;
-    [SerializeField] private float _spawnInterval;
+    [SerializeField] protected CubePositionRandomizer _randomazer;
+    [SerializeField] protected float _spawnInterval;
 
-    private WaitForSeconds _waitForSecond;
+    protected WaitForSeconds _waitForSecond;
 
-    private void Awake()
+    protected virtual bool UseTimer => true;
+
+    protected virtual void Awake()
     {
         _waitForSecond = new WaitForSeconds(_spawnInterval);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-        StartCoroutine(SpawnRoutine());
+        if(UseTimer)
+            StartCoroutine(SpawnRoutine());
     }
 
     private IEnumerator SpawnRoutine()
@@ -30,5 +31,5 @@ public class GenericSpawner<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    protected virtual void Spawn(){}
+    protected abstract void Spawn();
 }

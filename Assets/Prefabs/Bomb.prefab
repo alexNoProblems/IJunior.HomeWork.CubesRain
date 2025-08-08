@@ -50,8 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minFadeTime: 2
   _maxFadeTime: 5
-  _explosionForce: 500
+  _explosionForce: 20
   _explosionRadius: 5
+  _returnDelay: 0.5
 --- !u!33 &3307454356661654400
 MeshFilter:
   m_ObjectHideFlags: 0
