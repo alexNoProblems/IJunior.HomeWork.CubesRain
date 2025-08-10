@@ -3,39 +3,42 @@ using TMPro;
 
 public class SpawnerStatisticsUI : MonoBehaviour
 {
-    [SerializeField] private GenericPool<Cube> _cubePool;
-    [SerializeField] private GenericPool<Bomb> _bombPool;
-    [SerializeField] private TMP_Text _cubeSpawnedEverText;
-    [SerializeField] private TMP_Text _cubeCreatedText;
-    [SerializeField] private TMP_Text _cubeActiveText;
-    [SerializeField] private TMP_Text _bombSpawnedEverText;
-    [SerializeField] private TMP_Text _bombCreatedText;
-    [SerializeField] private TMP_Text _bombActiveText;
-    [SerializeField] private float _updateInterval = 0.25f;
+    [SerializeField] private MonoBehaviour _poolBehavior;
+    [SerializeField] private TMP_Text _spawnedEverText;
+    [SerializeField] private TMP_Text _createdText;
+    [SerializeField] private TMP_Text _activeText;
 
-    private float _timer;
+    private IPoolStats _pool;
 
-    private void Update()
+    private void Awake()
     {
-        _timer += Time.deltaTime;
+        _pool = _poolBehavior as IPoolStats;
+    }
 
-        if (_timer < _updateInterval)
+    private void OnEnable()
+    {
+        if (_pool == null)
             return;
 
-        _timer = 0f;
+        _pool.StatsChanged += Refresh;
+        Refresh();
+    }
 
-        if (_cubePool != null)
-        {
-            _cubeSpawnedEverText.text = _cubePool.SpawnedEverCount.ToString();
-            _cubeCreatedText.text = _cubePool.CreatedCount.ToString();
-            _cubeActiveText.text = _cubePool.ActiveCount.ToString();
-        }
+    private void OnDisable()
+    {
+        if (_pool == null)
+            return;
 
-        if (_bombPool != null)
-        {
-            _bombSpawnedEverText.text = _bombPool.SpawnedEverCount.ToString();
-            _bombCreatedText.text = _bombPool.CreatedCount.ToString();
-            _bombActiveText.text = _bombPool.ActiveCount.ToString();
-        }        
+        _pool.StatsChanged -= Refresh;
+    }
+
+    private void Refresh()
+    {
+        if (_spawnedEverText)
+            _spawnedEverText.text = _pool.SpawnedEverCount.ToString();
+        if (_createdText)
+            _createdText.text = _pool.CreatedCount.ToString();
+        if (_activeText)
+            _activeText.text = _pool.ActiveCount.ToString();
     }
 }

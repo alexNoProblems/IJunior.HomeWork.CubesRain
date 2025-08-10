@@ -11,7 +11,7 @@ public class Cube : MonoBehaviour
     private GenericPool<Cube> _factory;
     private bool _hasCollided = false;
 
-    public event Action<Vector3> CubeDestroyed;
+    public event Action<Cube, Vector3> CubeDestroyed;
 
     private void Awake()
     {
@@ -60,11 +60,11 @@ public class Cube : MonoBehaviour
 
     private void HandleLifetimeEnded()
     {
-        CubeDestroyed?.Invoke(transform.position);
+        CubeDestroyed?.Invoke(this, transform.position);
 
         if (_factory != null)
             _factory.Return(this);
         else
-            throw new System.InvalidOperationException("Cube: Factory не инициализирована. Невозможно вернуть cube в пул!!!");
+            throw new InvalidOperationException("Cube: Factory не инициализирована. Невозможно вернуть cube в пул!!!");
     }
 }

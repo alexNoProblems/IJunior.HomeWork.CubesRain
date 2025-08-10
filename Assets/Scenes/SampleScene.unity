@@ -1100,9 +1100,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 648657727}
+  - component: {fileID: 648657729}
   - component: {fileID: 648657728}
   m_Layer: 5
-  m_Name: CubesText
+  m_Name: CubesPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1158,6 +1159,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &648657729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648657726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7c947adf82947999df4a812dc72b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolBehavior: {fileID: 898669004}
+  _spawnedEverText: {fileID: 326296254}
+  _createdText: {fileID: 1117789297}
+  _activeText: {fileID: 1964186822}
 --- !u!1 &702185798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,15 +1916,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce7c947adf82947999df4a812dc72b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cubePool: {fileID: 898669004}
-  _bombPool: {fileID: 531596146}
-  _cubeSpawnedEverText: {fileID: 326296254}
-  _cubeCreatedText: {fileID: 1117789297}
-  _cubeActiveText: {fileID: 1964186822}
-  _bombSpawnedEverText: {fileID: 304637300}
-  _bombCreatedText: {fileID: 320111125}
-  _bombActiveText: {fileID: 1013966844}
-  _updateInterval: 0.25
+  _poolBehavior: {fileID: 0}
+  _spawnedEverText: {fileID: 0}
+  _createdText: {fileID: 0}
+  _activeText: {fileID: 0}
 --- !u!1 &898669001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1963,9 +1975,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 905997770}
+  - component: {fileID: 905997772}
   - component: {fileID: 905997771}
   m_Layer: 5
-  m_Name: BombText
+  m_Name: BombPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2021,6 +2034,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &905997772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905997769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7c947adf82947999df4a812dc72b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolBehavior: {fileID: 531596146}
+  _spawnedEverText: {fileID: 304637300}
+  _createdText: {fileID: 320111125}
+  _activeText: {fileID: 1013966844}
 --- !u!1 &912234516
 GameObject:
   m_ObjectHideFlags: 0
@@ -2934,10 +2963,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5259ccf212514ede90d291e29e128bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _randomazer: {fileID: 1413711961}
   _spawnInterval: 1
   _cubePool: {fileID: 898669004}
   _bombSpawner: {fileID: 1496572328}
+  _randomizer: {fileID: 1413711961}
 --- !u!114 &1413711961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2996,8 +3025,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bdc0b79aab34e7ea6dd209a9d951fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _randomazer: {fileID: 0}
-  _spawnInterval: 0
   _bombPool: {fileID: 531596146}
 --- !u!1 &1515145879
 GameObject:

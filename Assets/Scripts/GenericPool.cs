@@ -1,19 +1,21 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenericPool<T> : MonoBehaviour where T : MonoBehaviour
+public class GenericPool<T> : MonoBehaviour, IPoolStats where T : MonoBehaviour
 {
     [SerializeField] private T _prefab;
-    [SerializeField] private int _poolCapacity;
+    [SerializeField] private int _poolCapacity = 20;
 
-    private Queue<T> _availableObjects = new Queue<T>();
+    private readonly Queue<T> _availableObjects = new Queue<T>();
     private int _createdCount;
     private int _spawnedEverCount;
 
     public int CreatedCount => _createdCount;
     public int SpawnedEverCount => _spawnedEverCount;
-    public int AvailableObjectsCount => _availableObjects.Count;
     public int ActiveCount => _createdCount - _availableObjects.Count;
+
+    public event Action StatsChanged;
 
     private void Awake()
     {
@@ -43,6 +45,8 @@ public class GenericPool<T> : MonoBehaviour where T : MonoBehaviour
         obj.gameObject.SetActive(true);
         _spawnedEverCount++;
 
+        StatsChanged?.Invoke();
+
         return obj;
     }
 
@@ -50,5 +54,7 @@ public class GenericPool<T> : MonoBehaviour where T : MonoBehaviour
     {
         obj.gameObject.SetActive(false);
         _availableObjects.Enqueue(obj);
+
+        StatsChanged?.Invoke();
     }
 }
